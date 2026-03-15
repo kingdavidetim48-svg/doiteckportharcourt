@@ -578,26 +578,23 @@ header {
 }
 .ceo-testimonial {
   position: relative;
-  /* padding-bottom: 56.25%; */
-  height: 330px;
-  width: 600px;
-  align-items: center;
-  justify-content: center;
-  margin: 55px 0;
-  margin-left: 270px;
   overflow: hidden;
   border-radius: 12px;
-  box-shadow: 0 10px 30px var(--shadow-medium);
-  transform: scale(1);
-  transition: transform 0.3s ease-out;
+  box-shadow: 0 8px 20px var(--shadow-medium);
+  margin-bottom: 10px;
+  transition:
+    transform 0.4s ease-in-out,
+    box-shadow 0.4s ease-in-out;
 }
 .ceo-testimonial iframe {
-  width: 100%;
-  height: 100%;
+  width: 60%;
+  height: 280px;
+  margin: 0 auto;
   object-fit: cover;
   display: block;
-  border-radius: 12px;
+  border-radius: 10px;
   transition: transform 0.5s ease;
+  border: 3px solid red;
 }
 
 .gallery-overlay {
@@ -646,7 +643,7 @@ header {
 }
 
 .why-choose-us h2 {
-  font-size: 3em;
+  font-size: 2em;
   margin-bottom: 60px;
   color: var(--secondary-theme-color);
   position: relative;
@@ -770,14 +767,12 @@ header {
 
 .video-testimonial {
   position: relative;
-  padding-bottom: 56.25%;
-  height: 0;
-  margin: 25px;
   overflow: hidden;
   border-radius: 12px;
-  box-shadow: 0 10px 30px var(--shadow-medium);
-  transform: scale(1);
-  transition: transform 0.3s ease-out;
+  box-shadow: 0 8px 20px var(--shadow-medium);
+  transition:
+    transform 0.4s ease-in-out,
+    box-shadow 0.4s ease-in-out;
 }
 
 .video-testimonial:hover {
@@ -785,12 +780,13 @@ header {
 }
 
 .video-testimonial iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
   width: 100%;
-  height: 100%;
-  border: none;
+  height: 280px;
+  object-fit: cover;
+  display: block;
+  border-radius: 10px;
+  transition: transform 0.5s ease;
+  border: 3px solid red;
 }
 .content h2 {
   color: var(--secondary-theme-color);
@@ -893,24 +889,18 @@ header {
   transition: color 0.3s ease;
   font-weight: 700;
 }
-
-.google-reviews-link::after {
+.google-reviews-link::before {
   content: "";
   position: absolute;
   left: 0;
   bottom: -3px;
-  width: 0;
+  width: 100%;
   height: 2px;
   background-color: var(--accent-theme-color);
   transition: width 0.3s ease-out;
 }
-
 .google-reviews-link:hover {
   color: var(--google-link-hover);
-}
-
-.google-reviews-link:hover::after {
-  width: 100%;
 }
 
 .google-reviews-grid {
@@ -1034,6 +1024,7 @@ header {
   text-transform: uppercase;
   position: relative;
   overflow: hidden;
+  transition: 1s ease;
 }
 
 .cta-button:hover {
@@ -1226,7 +1217,7 @@ footer {
 .quote-form-section h2::after {
   content: "";
   position: absolute;
-  left: 50%;
+  left: 54%;
   bottom: -10px;
   transform: translateX(-50%);
   width: 60px;
@@ -1437,7 +1428,6 @@ textarea.valid {
     display: none;
   }
   .logo {
-    /* margin-bottom: 55px; */
   }
 
   .hero-section {
@@ -1491,7 +1481,7 @@ textarea.valid {
     transform: translateX(0);
   }
   .nav-links li {
-    margin: 15px 0;
+    margin: 10px 0;
     width: 100%;
     text-align: center;
   }
@@ -1500,6 +1490,7 @@ textarea.valid {
     padding: 10px 0;
     display: block;
   }
+
   .nav-links li a::after {
     left: 50%;
     transform: translateX(-50%);
@@ -1519,10 +1510,14 @@ textarea.valid {
     display: block;
     order: 3;
     margin: 20px;
+    transition: 1s ease;
+  }
+  .hamburger.active {
+    transform: translateY(-60px);
   }
 }
 
-@media all and (min-width: 768px) and (max-width: 999px) {
+@media all and (min-width: 768px) and (max-width: 989px) {
   .top-bar {
     flex-direction: column;
     text-align: center;
@@ -1531,21 +1526,7 @@ textarea.valid {
     padding-bottom: 0;
     margin-bottom: 0;
   }
-  .ceo-testimonial {
-    position: relative;
-    /* padding-bottom: 56.25%; */
-    height: 330px;
-    width: 600px;
-    align-items: center;
-    justify-content: center;
-    margin: 55px 0;
-    margin-left: 0px;
-    overflow: hidden;
-    border-radius: 12px;
-    box-shadow: 0 10px 30px var(--shadow-medium);
-    transform: scale(1);
-    transition: transform 0.3s ease-out;
-  }
+
   .nav-button {
     display: none;
   }
@@ -1577,7 +1558,7 @@ textarea.valid {
   .why-choose-us h2,
   .feedback-section h2,
   .cta-section h2 {
-    font-size: 2.5em;
+    font-size: 1.5em;
   }
   .cta-section p {
     font-size: 1.1em;
@@ -1591,6 +1572,7 @@ textarea.valid {
   .choose-us-item {
     max-width: 100%;
   }
+
   .google-reviews-grid {
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   }
@@ -1608,6 +1590,7 @@ textarea.valid {
     background-color: var(--header-bg);
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     padding: 10px;
     transform: translateX(100%);
     transition: transform 0.5s ease-out;
@@ -1619,6 +1602,7 @@ textarea.valid {
   }
   .nav-links li {
     width: 100%;
+    margin-top: 10px;
     text-align: center;
   }
   .nav-links li a {
@@ -1636,6 +1620,14 @@ textarea.valid {
   }
   .social-links {
     justify-content: center;
+  }
+  .hamburger {
+    transition: 1s ease;
+    font-size: 3rem;
+  }
+  .hamburger.active {
+    font-size: 2rem;
+    transform: translateY(-120px);
   }
 }
 
@@ -1656,7 +1648,10 @@ textarea.valid {
   }
   .hero-content p {
     font-size: 1em;
-    max-width: 250px;
+  }
+  .google-reviews-link::before {
+    content: "";
+    width: 0;
   }
   .hamburger {
     display: block;
@@ -1674,21 +1669,7 @@ textarea.valid {
     text-align: center;
     line-height: 1.5;
   }
-  .ceo-testimonial {
-    position: relative;
-    /* padding-bottom: 56.25%; */
-    height: 330px;
-    width: 300px;
-    align-items: center;
-    justify-content: center;
-    margin: 55px 0;
-    margin-left: -25px;
-    overflow: hidden;
-    border-radius: 12px;
-    box-shadow: 0 10px 30px var(--shadow-medium);
-    transform: scale(1);
-    transition: transform 0.3s ease-out;
-  }
+
   .hero-button {
     font-size: 1em;
     padding: 10px 15px;
@@ -1719,19 +1700,25 @@ textarea.valid {
   .gallery-item iframe {
     height: 250px;
   }
+  .ceo-testimonial iframe {
+    height: 250px;
+    width: 100%;
+  }
+  .video-testimonial iframe {
+    height: 250px;
+  }
   .about-section h2,
   .why-choose-us h2,
   .feedback-section h2,
   .cta-section h2 {
-    font-size: 2em;
+    font-size: 1.5em;
   }
   .cta-section p {
     font-size: 1em;
   }
   .cta-button {
     padding: 13px 5px;
-
-    font-size: 0.65em;
+    font-size: 0.8rem;
     text-transform: capitalize;
   }
   .feedback-grid {
@@ -1740,14 +1727,14 @@ textarea.valid {
   .google-reviews-grid {
     grid-template-columns: 1fr;
     position: relative;
-    /* left: 150px; */
   }
+
   .nav-links {
     position: fixed;
     top: 0;
     right: 0;
-    width: 75%;
-    max-width: 320px;
+    width: 70%;
+    max-width: 300px;
     height: 100vh;
     background-color: var(--header-bg);
     flex-direction: column;
@@ -1763,23 +1750,36 @@ textarea.valid {
   }
   .nav-links li {
     margin-top: 15px;
-
     width: 100%;
-
     text-align: center;
   }
   .nav-links li a {
-    font-size: 0.9em;
+    font-size: 1.2em;
     display: block;
   }
   .nav-links li a::after {
     left: 50%;
     transform: translateX(-50%);
   }
+  .google-review-card {
+    max-width: 100%;
+  }
   .logo {
     font-size: 16px;
     transform: translateX(-23%);
-    /* margin-bottom: 200px; */
+  }
+  .hero-content {
+    align-items: center;
+    justify-content: center;
+  }
+  .hero-content {
+  }
+  .hero-image {
+    margin: 0 auto;
+    width: 100px;
+  }
+  .hero-image img {
+    width: 100%;
   }
 }
 @media all and (max-width: 400px) {
@@ -1789,9 +1789,11 @@ textarea.valid {
     position: relative;
   }
   .hero-image img {
+    margin: 0 auto;
     height: 350px;
     width: 350px;
     left: -10%;
     border-top-right-radius: 50px;
   }
 }
+/* https://mail.google.com/mail/u/0/#inbox/FMfcgzQfCMwMfcNlZrTfKMSVCkrTbNWL */
