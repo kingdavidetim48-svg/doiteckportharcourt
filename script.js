@@ -167,7 +167,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 const form = document.querySelector(".quote-form");
-const loader = document.getElementById("loading-overlay"); // Corrected ID from 'form-loader' to 'loading-overlay'
+const loader = document.getElementById("loading-overlay");
 
 function validateNigerianPhone(phone) {
   const cleaned = phone.replace(/\s+/g, "");
@@ -222,23 +222,21 @@ form.addEventListener("submit", function (e) {
   const whatsappMessage = `
 Hello, I am ${name}.
 
-Project Type: ${project}
-Phone: ${phone}
-Email: ${email}
+My Project Type is ${project}.
+My Phone Number is ${phone}.
+My Email address is ${email}.
 
-Project Details:
+My Project Details is as follows:
 ${message}
 `;
 
   const encodedMessage = encodeURIComponent(whatsappMessage);
 
-  // Using the phone number from the top contact info
-  const clientNumber = "2348094047342";
+  const clientNumber = "2349080000153";
   const whatsappURL = `https://wa.me/${clientNumber}?text=${encodedMessage}`;
 
   if (loader) {
-    // Ensure loader exists before trying to display
-    loader.style.display = "flex"; // Changed to 'flex' for centering spinner
+    loader.style.display = "flex";
   }
 
   let clicks = localStorage.getItem("whatsappClicks") || 0;
@@ -253,6 +251,107 @@ ${message}
     }
     form.reset();
   }, 1500);
+});
+// https://mail.google.com/mail/u/0/#inbox/FMfcgzQfCMwMfcNlZrTfKMSVCkrTbNWL
+const track = document.querySelector(".carousel-track");
+const slides = Array.from(document.querySelectorAll(".carousel-item"));
+const nextBtn = document.querySelector(".carousel-btn.next");
+const prevBtn = document.querySelector(".carousel-btn.prev");
 
-  // WhatsApp sending code here...
+let index = 0;
+let slideWidth = slides[0].getBoundingClientRect().width;
+
+// 🔥 Clone first & last for infinite effect
+const firstClone = slides[0].cloneNode(true);
+const lastClone = slides[slides.length - 1].cloneNode(true);
+
+firstClone.id = "first-clone";
+lastClone.id = "last-clone";
+
+track.appendChild(firstClone);
+track.insertBefore(lastClone, slides[0]);
+
+const allSlides = document.querySelectorAll(".carousel-item");
+
+// move to correct start position
+index = 1;
+track.style.transform = `translateX(${-slideWidth * index}px)`;
+
+// 🔥 update size on resize
+function updateSize() {
+  slideWidth = slides[0].getBoundingClientRect().width;
+  track.style.transition = "none";
+  track.style.transform = `translateX(${-slideWidth * index}px)`;
+}
+window.addEventListener("resize", updateSize);
+
+// 🔥 move function
+function moveToSlide() {
+  track.style.transition = "transform 0.5s ease-in-out";
+  track.style.transform = `translateX(${-slideWidth * index}px)`;
+}
+
+// NEXT
+function nextSlide() {
+  if (index >= allSlides.length - 1) return;
+  index++;
+  moveToSlide();
+}
+
+// PREV
+function prevSlide() {
+  if (index <= 0) return;
+  index--;
+  moveToSlide();
+}
+
+// buttons
+nextBtn.addEventListener("click", nextSlide);
+prevBtn.addEventListener("click", prevSlide);
+
+// 🔥 infinite loop fix
+track.addEventListener("transitionend", () => {
+  if (allSlides[index].id === "first-clone") {
+    track.style.transition = "none";
+    index = 1;
+    track.style.transform = `translateX(${-slideWidth * index}px)`;
+  }
+
+  if (allSlides[index].id === "last-clone") {
+    track.style.transition = "none";
+    index = allSlides.length - 2;
+    track.style.transform = `translateX(${-slideWidth * index}px)`;
+  }
+});
+
+// 🔥 autoplay
+let autoPlay = setInterval(nextSlide, 4000);
+
+// 🔥 pause on hover
+const carousel = document.querySelector(".carousel");
+
+carousel.addEventListener("mouseenter", () => {
+  clearInterval(autoPlay);
+});
+
+carousel.addEventListener("mouseleave", () => {
+  autoPlay = setInterval(nextSlide, 4000);
+});
+
+// 🔥 TOUCH SWIPE (MOBILE)
+let startX = 0;
+let endX = 0;
+
+carousel.addEventListener("touchstart", (e) => {
+  startX = e.touches[0].clientX;
+});
+
+carousel.addEventListener("touchend", (e) => {
+  endX = e.changedTouches[0].clientX;
+
+  if (startX - endX > 50) {
+    nextSlide(); // swipe left
+  } else if (endX - startX > 50) {
+    prevSlide(); // swipe right
+  }
 });
