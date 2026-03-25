@@ -1396,6 +1396,42 @@ textarea.valid {
   height: 60px;
   animation: spin 1s linear infinite;
 }
+.custom-alert {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.8);
+  background: #1e1e1e;
+  color: #fff;
+  padding: 20px 25px;
+  border-radius: 12px;
+  text-align: center;
+  width: 300px;
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+.custom-alert.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+  pointer-events: auto;
+}
+
+.custom-alert button {
+  margin-top: 15px;
+  padding: 8px 16px;
+  border: none;
+  background: #f39c12;
+  color: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.custom-alert button:hover {
+  background: #e67e22;
+}
 @keyframes spin {
   0% {
     transform: rotate(0deg);
