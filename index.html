@@ -399,7 +399,7 @@ A five bedroom contemporary duplex
           </p>
           <form
             class="quote-form"
-            action="https://formspree.io/f/xyknpvvq"
+            action="https://formspree.io/f/xgopwbrw"
             method="POST"
           >
             <div class="form-group">
@@ -413,6 +413,14 @@ A five bedroom contemporary duplex
               />
               <span class="error" id="name-error"></span>
             </div>
+                          <div class="form-group">
+  <label for="client-type">Are you a new or existing client?</label>
+  <select id="client-type" name="client-type" required>
+    <option value="" disabled selected>-- Select --</option>
+    <option value="New Client">New Client</option>
+    <option value="Existing Client">Existing Client</option>
+  </select>
+</div>
             <div class="form-group">
               <label for="email">Your Email</label>
               <input
@@ -455,14 +463,20 @@ A five bedroom contemporary duplex
                 placeholder="Describe your project, budget, and timeline..."
                 required
               ></textarea>
+      
               <span class="error" id="message-error"></span>
             </div>
             <button type="submit" class="submit-button">Request Quote</button>
           </form>
         </div>
+  
         <div id="loading-overlay">
           <div class="spinner"></div>
         </div>
+        <div id="custom-alert" class="custom-alert">
+  <p id="alert-message"></p>
+  <button id="alert-close">OK</button>
+</div>
       </section>
 
       <section class="cta-section reveal" id="contact">
