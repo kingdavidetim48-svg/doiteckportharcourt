@@ -1,25 +1,74 @@
 document.addEventListener("DOMContentLoaded", () => {
+  /* =========================
+     ELEMENTS
+  ========================== */
   const hamburger = document.getElementById("hamburger-menu");
   const navLinks = document.querySelector(".nav-links");
   const themeToggle = document.getElementById("theme-toggle");
   const body = document.body;
   const sections = document.querySelectorAll("section[id]");
   const scrollToTopButton = document.getElementById("scroll-to-top");
+  const form = document.querySelector(".quote-form");
+  const loader = document.getElementById("loading-overlay");
 
-  hamburger.addEventListener("click", () => {
-    hamburger.classList.toggle("active");
-    navLinks.classList.toggle("active");
-    body.style.overflow = navLinks.classList.contains("active")
-      ? "hidden"
-      : "auto";
-  });
+  /* =========================
+     TOAST SYSTEM (CUSTOM ALERT UPGRADE)
+  ========================== */
+  const toast = document.createElement("div");
+  toast.id = "toast";
+  toast.style.cssText = `
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #1e1e1e;
+    color: #fff;
+    padding: 12px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    z-index: 9999;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: all 0.3s ease;
+    max-width: 280px;
+  `;
+  document.body.appendChild(toast);
+
+  function showToast(message, type = "success") {
+    toast.textContent = message;
+
+    toast.style.background =
+      type === "error" ? "#e74c3c" : type === "success" ? "#2ecc71" : "#1e1e1e";
+
+    toast.style.opacity = "1";
+    toast.style.transform = "translateY(0)";
+
+    setTimeout(() => {
+      toast.style.opacity = "0";
+      toast.style.transform = "translateY(-20px)";
+    }, 3000);
+  }
+
+  window.showToast = showToast;
+
+  /* =========================
+     MOBILE MENU
+  ========================== */
+  if (hamburger && navLinks) {
+    hamburger.addEventListener("click", () => {
+      hamburger.classList.toggle("active");
+      navLinks.classList.toggle("active");
+      body.style.overflow = navLinks.classList.contains("active")
+        ? "hidden"
+        : "auto";
+    });
+  }
 
   document.addEventListener("click", (e) => {
     if (
-      navLinks.classList.contains("active") &&
+      navLinks?.classList.contains("active") &&
       !navLinks.contains(e.target) &&
       !hamburger.contains(e.target) &&
-      !themeToggle.contains(e.target)
+      !themeToggle?.contains(e.target)
     ) {
       hamburger.classList.remove("active");
       navLinks.classList.remove("active");
@@ -27,331 +76,180 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  /* =========================
+     SMOOTH SCROLL
+  ========================== */
   document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
     anchor.addEventListener("click", function (e) {
       e.preventDefault();
 
-      if (navLinks.classList.contains("active")) {
+      if (navLinks?.classList.contains("active")) {
         hamburger.classList.remove("active");
         navLinks.classList.remove("active");
         body.style.overflow = "auto";
       }
 
-      const targetId = this.getAttribute("href");
-      const targetElement = document.querySelector(targetId);
+      const target = document.querySelector(this.getAttribute("href"));
+      if (!target) return;
 
-      if (targetElement) {
-        const headerOffset = document.querySelector("header").offsetHeight;
-        const offsetPosition =
-          targetElement.getBoundingClientRect().top +
-          window.pageYOffset -
-          headerOffset;
+      const headerOffset = document.querySelector("header")?.offsetHeight || 0;
+      const offsetPosition =
+        target.getBoundingClientRect().top + window.pageYOffset - headerOffset;
 
-        window.scrollTo({
-          top: offsetPosition,
-          behavior: "smooth",
-        });
-      }
+      window.scrollTo({ top: offsetPosition, behavior: "smooth" });
     });
   });
 
+  /* =========================
+     SCROLL ANIMATIONS
+  ========================== */
   const reveals = document.querySelectorAll(".reveal");
 
   const handleScrollAnimations = () => {
     reveals.forEach((el) => {
-      const elementTop = el.getBoundingClientRect().top;
-      const viewportHeight = window.innerHeight;
-      const triggerPoint = viewportHeight * 0.85;
+      const top = el.getBoundingClientRect().top;
+      const trigger = window.innerHeight * 0.85;
 
-      if (elementTop < triggerPoint && elementTop > -el.offsetHeight) {
+      if (top < trigger && top > -el.offsetHeight) {
         el.classList.add("active");
-
-        const gridItems = el.querySelectorAll(
-          ".gallery-item,.choose-us-item,.testimonial-card,.google-review-card",
-        );
-        gridItems.forEach((item, index) => {
-          if (!item.classList.contains("active")) {
-            item.style.setProperty("--delay", `${index * 0.1}s`);
-            item.classList.add("active");
-          }
-        });
       } else {
         el.classList.remove("active");
       }
     });
   };
 
-  handleScrollAnimations();
   window.addEventListener("scroll", handleScrollAnimations);
+  handleScrollAnimations();
 
+  /* =========================
+     ACTIVE NAV LINK
+  ========================== */
   const setActiveLink = () => {
-    let currentActiveSection = "";
+    let current = "";
+
     sections.forEach((section) => {
-      const sectionTop =
-        section.offsetTop - document.querySelector("header").offsetHeight - 10;
-      if (window.pageYOffset >= sectionTop) {
-        currentActiveSection = section.getAttribute("id");
+      const top =
+        section.offsetTop -
+        (document.querySelector("header")?.offsetHeight || 0);
+
+      if (window.pageYOffset >= top) {
+        current = section.id;
       }
     });
 
-    navLinks.querySelectorAll("a").forEach((a) => {
+    navLinks?.querySelectorAll("a").forEach((a) => {
       a.classList.remove("active");
-
-      if (a.getAttribute("href") === `#${currentActiveSection}`) {
+      if (a.getAttribute("href") === `#${current}`) {
         a.classList.add("active");
       }
     });
   };
-  setActiveLink();
-  window.addEventListener("scroll", setActiveLink);
 
+  window.addEventListener("scroll", setActiveLink);
+  setActiveLink();
+
+  /* =========================
+     THEME TOGGLE
+  ========================== */
   const setTheme = (mode) => {
     if (mode === "dark") {
       body.classList.add("dark-mode");
       themeToggle
-        .querySelector("ion-icon")
-        .setAttribute("name", "sunny-outline");
+        ?.querySelector("ion-icon")
+        ?.setAttribute("name", "sunny-outline");
     } else {
       body.classList.remove("dark-mode");
       themeToggle
-        .querySelector("ion-icon")
-        .setAttribute("name", "moon-outline");
+        ?.querySelector("ion-icon")
+        ?.setAttribute("name", "moon-outline");
     }
     localStorage.setItem("theme", mode);
   };
 
   const savedTheme = localStorage.getItem("theme");
-  if (savedTheme) {
-    setTheme(savedTheme);
-  } else if (
-    window.matchMedia &&
-    window.matchMedia("(prefers-color-scheme: dark)").matches
-  ) {
-    setTheme("dark");
-  } else {
-    setTheme("light");
-  }
 
-  themeToggle.addEventListener("click", () => {
-    if (body.classList.contains("dark-mode")) {
-      setTheme("light");
-    } else {
-      setTheme("dark");
-    }
+  if (savedTheme) setTheme(savedTheme);
+  else if (window.matchMedia("(prefers-color-scheme: dark)").matches)
+    setTheme("dark");
+  else setTheme("light");
+
+  themeToggle?.addEventListener("click", () => {
+    setTheme(body.classList.contains("dark-mode") ? "light" : "dark");
   });
 
-  const toggleScrollToTopButton = () => {
-    if (window.pageYOffset > 300) {
-      scrollToTopButton.classList.add("show");
-    } else {
-      scrollToTopButton.classList.remove("show");
-    }
-  };
-
+  /* =========================
+     SCROLL TO TOP
+  ========================== */
   if (scrollToTopButton) {
     scrollToTopButton.addEventListener("click", () => {
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth",
-      });
+      window.scrollTo({ top: 0, behavior: "smooth" });
     });
   }
 
-  toggleScrollToTopButton();
-  window.addEventListener("scroll", toggleScrollToTopButton);
+  window.addEventListener("scroll", () => {
+    if (!scrollToTopButton) return;
+    scrollToTopButton.classList.toggle("show", window.pageYOffset > 300);
+  });
 
-  const currentYearSpan = document.getElementById("current-year");
-  if (currentYearSpan) {
-    currentYearSpan.textContent = new Date().getFullYear();
-  }
-});
+  /* =========================
+     FORM VALIDATION + FORMSPREE
+  ========================== */
 
-const form = document.querySelector(".quote-form");
-const loader = document.getElementById("loading-overlay");
-
-function validateNigerianPhone(phone) {
-  const cleaned = phone.replace(/\s+/g, "");
-  const regex = /^(0|\+234|234)[789][01]\d{8}$/;
-  return regex.test(cleaned);
-}
-function clearErrors() {
-  document.querySelectorAll(".error").forEach((el) => (el.textContent = ""));
-}
-
-form.addEventListener("submit", function (e) {
-  e.preventDefault();
-  clearErrors();
-
-  const name = document.getElementById("name").value.trim();
-  const email = document.getElementById("email").value.trim();
-  const phone = document.getElementById("phone").value.trim();
-  const project = document.getElementById("project-type").value;
-  const message = document.getElementById("message").value.trim();
-
-  let hasError = false;
-
-  if (!name) {
-    document.getElementById("name-error").textContent = "Name is required.";
-    hasError = true;
+  function validateNigerianPhone(phone) {
+    const cleaned = phone.replace(/\s+/g, "");
+    return /^(0|\+234|234)[789][01]\d{8}$/.test(cleaned);
   }
 
-  if (!email) {
-    document.getElementById("email-error").textContent = "Email is required.";
-    hasError = true;
+  function clearErrors() {
+    document.querySelectorAll(".error").forEach((el) => (el.textContent = ""));
   }
 
-  if (!validateNigerianPhone(phone)) {
-    document.getElementById("phone-error").textContent =
-      "Enter a valid Nigerian phone number.";
-    hasError = true;
+  if (form) {
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      clearErrors();
+
+      const name = document.getElementById("name")?.value.trim();
+      const email = document.getElementById("email")?.value.trim();
+      const phone = document.getElementById("phone")?.value.trim();
+      const project = document.getElementById("project-type")?.value;
+      const message = document.getElementById("message")?.value.trim();
+      const clientType = document.getElementById("client-type")?.value;
+
+      if (!name) return showToast("Please enter your name", "error");
+      if (!email) return showToast("Please enter your email", "error");
+      if (!phone || !validateNigerianPhone(phone))
+        return showToast("Enter a valid Nigerian phone number", "error");
+      if (!project) return showToast("Select a project type", "error");
+      if (!message) return showToast("Project details required", "error");
+
+      const subject = `${clientType || "Client"} - Doi-Teck Inquiry`;
+
+      const formData = new FormData(form);
+      formData.append("_subject", subject);
+
+      if (loader) loader.style.display = "flex";
+
+      try {
+        await fetch(form.action, {
+          method: "POST",
+          body: formData,
+          headers: { Accept: "application/json" },
+        });
+
+        showToast("Message sent successfully 🚀", "success");
+        form.reset();
+      } catch (err) {
+        showToast("Something went wrong. Try again.", "error");
+      }
+
+      if (loader) loader.style.display = "none";
+    });
   }
 
-  if (!project) {
-    document.getElementById("project-error").textContent =
-      "Please select a project type.";
-    hasError = true;
-  }
-
-  if (!message) {
-    document.getElementById("message-error").textContent =
-      "Project details are required.";
-    hasError = true;
-  }
-
-  if (hasError) return;
-  const whatsappMessage = `
-Hello, I am ${name}.
-
-My Project Type is ${project}.
-My Phone Number is ${phone}.
-My Email address is ${email}.
-
-My Project Details is as follows:
-${message}
-`;
-
-  const encodedMessage = encodeURIComponent(whatsappMessage);
-
-  const clientNumber = "2349080000153";
-  const whatsappURL = `https://wa.me/${clientNumber}?text=${encodedMessage}`;
-
-  if (loader) {
-    loader.style.display = "flex";
-  }
-
-  let clicks = localStorage.getItem("whatsappClicks") || 0;
-  clicks++;
-  localStorage.setItem("whatsappClicks", clicks);
-  console.log("Total WhatsApp Clicks:", clicks);
-
-  setTimeout(() => {
-    window.open(whatsappURL, "_blank");
-    if (loader) {
-      loader.style.display = "none";
-    }
-    form.reset();
-  }, 1500);
-});
-// https://mail.google.com/mail/u/0/#inbox/FMfcgzQfCMwMfcNlZrTfKMSVCkrTbNWL
-const track = document.querySelector(".carousel-track");
-const slides = Array.from(document.querySelectorAll(".carousel-item"));
-const nextBtn = document.querySelector(".carousel-btn.next");
-const prevBtn = document.querySelector(".carousel-btn.prev");
-
-let index = 0;
-let slideWidth = slides[0].getBoundingClientRect().width;
-
-// 🔥 Clone first & last for infinite effect
-const firstClone = slides[0].cloneNode(true);
-const lastClone = slides[slides.length - 1].cloneNode(true);
-
-firstClone.id = "first-clone";
-lastClone.id = "last-clone";
-
-track.appendChild(firstClone);
-track.insertBefore(lastClone, slides[0]);
-
-const allSlides = document.querySelectorAll(".carousel-item");
-
-// move to correct start position
-index = 1;
-track.style.transform = `translateX(${-slideWidth * index}px)`;
-
-// 🔥 update size on resize
-function updateSize() {
-  slideWidth = slides[0].getBoundingClientRect().width;
-  track.style.transition = "none";
-  track.style.transform = `translateX(${-slideWidth * index}px)`;
-}
-window.addEventListener("resize", updateSize);
-
-// 🔥 move function
-function moveToSlide() {
-  track.style.transition = "transform 0.5s ease-in-out";
-  track.style.transform = `translateX(${-slideWidth * index}px)`;
-}
-
-// NEXT
-function nextSlide() {
-  if (index >= allSlides.length - 1) return;
-  index++;
-  moveToSlide();
-}
-
-// PREV
-function prevSlide() {
-  if (index <= 0) return;
-  index--;
-  moveToSlide();
-}
-
-// buttons
-nextBtn.addEventListener("click", nextSlide);
-prevBtn.addEventListener("click", prevSlide);
-
-// 🔥 infinite loop fix
-track.addEventListener("transitionend", () => {
-  if (allSlides[index].id === "first-clone") {
-    track.style.transition = "none";
-    index = 1;
-    track.style.transform = `translateX(${-slideWidth * index}px)`;
-  }
-
-  if (allSlides[index].id === "last-clone") {
-    track.style.transition = "none";
-    index = allSlides.length - 2;
-    track.style.transform = `translateX(${-slideWidth * index}px)`;
-  }
-});
-
-// 🔥 autoplay
-let autoPlay = setInterval(nextSlide, 4000);
-
-// 🔥 pause on hover
-const carousel = document.querySelector(".carousel");
-
-carousel.addEventListener("mouseenter", () => {
-  clearInterval(autoPlay);
-});
-
-carousel.addEventListener("mouseleave", () => {
-  autoPlay = setInterval(nextSlide, 4000);
-});
-
-// 🔥 TOUCH SWIPE (MOBILE)
-let startX = 0;
-let endX = 0;
-
-carousel.addEventListener("touchstart", (e) => {
-  startX = e.touches[0].clientX;
-});
-
-carousel.addEventListener("touchend", (e) => {
-  endX = e.changedTouches[0].clientX;
-
-  if (startX - endX > 50) {
-    nextSlide(); // swipe left
-  } else if (endX - startX > 50) {
-    prevSlide(); // swipe right
-  }
+  /* =========================
+     YEAR
+  ========================== */
+  const year = document.getElementById("current-year");
+  if (year) year.textContent = new Date().getFullYear();
 });
