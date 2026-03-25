@@ -1196,12 +1196,12 @@ footer {
 
 .reveal {
   opacity: 0;
-  transform: translateY(40px);
-  transition: 1s ease;
+  transform: none !important;
 }
 .reveal.active {
   opacity: 1;
   transform: translateY(0);
+  transition: all 0.6s ease;
 }
 
 .gallery-item,
@@ -1432,6 +1432,10 @@ textarea.valid {
 .custom-alert button:hover {
   background: #e67e22;
 }
+.author {
+  font-weight: bold;
+}
+
 @keyframes spin {
   0% {
     transform: rotate(0deg);
@@ -1854,3 +1858,6 @@ textarea.valid {
     border-top-right-radius: 50px;
   }
 }
+/* advancly */
+/* 07089801294 */
+/* doiteck */
